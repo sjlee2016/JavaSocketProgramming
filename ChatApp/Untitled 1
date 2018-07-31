@@ -1,0 +1,15 @@
+User -> Server
+- login / logoff
+- status
+
+Server -> User
+- showing online/offline status of others
+
+User -> User
+-direct messages
+-broadcast messages
+
+Commands :
+
+login <user> <password>
+logoff

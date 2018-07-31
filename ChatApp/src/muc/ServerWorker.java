@@ -1,7 +1,6 @@
 package muc;
 import java.io.*;
-import java.net.Socket;
-import java.util.Date;
+import java.net.*;
 
 
 public class ServerWorker extends Thread {
@@ -28,18 +27,54 @@ public class ServerWorker extends Thread {
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		String line;
+		
 		while((line=reader.readLine())!=null)
 		{
-			if("quit".equalsIgnoreCase(line))  // stop connection when received "quit"
+			String msg[] = line.split(" ", 60);
+			String cmd = msg[0];
+			if(cmd.equals("Bye"))
 			{
 				break;
+			}else if(cmd.equals("login"))
+			{
+				try
+				{
+				String id = msg[1];
+				String password = msg[2];
+				outputStream.write((id+password).getBytes());
+				}
+				catch(ArrayIndexOutOfBoundsException exception)
+				{
+
+					outputStream.write(("Do you mean login ID Password? ").getBytes());
+					exception.getStackTrace(); 
+				}
+			}else if(cmd.equals("signin"))
+			{
+				try
+				{
+				String id = msg[1];
+				String password = msg[2];
+				outputStream.write((id+password).getBytes());
+				}
+				catch(ArrayIndexOutOfBoundsException exception)
+				{
+
+					outputStream.write(("Do you mean signin ID Password? ").getBytes());
+					exception.getStackTrace(); 
+				}
+				
+			}else
+			{
+				outputStream.write(line.getBytes());
+				
 			}
+				
 			// else echo back to the client
 			
-			String msg = "You typed : " + line + "\n";
-			outputStream.write(msg.getBytes());
 		}
 		clientSocket.close();
+		
 	}
-
 }
+

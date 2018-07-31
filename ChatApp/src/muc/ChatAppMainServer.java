@@ -1,20 +1,34 @@
 package muc;
 
-
-import java.net.ServerSocket;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
-import java.sql;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ServerMain {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		int port = 8828;
+public class ChatAppMainServer extends Thread{
+	
+	private final int serverPort;
+	
+	private ArrayList<ServerWorker> workerList = new ArrayList<>();
+	
+	public ChatAppMainServer(int serverPort )
+	{
+		this.serverPort = serverPort;
+		
+	}
+	
+	public List<ServerWorker> getWorkerList()
+	{
+		return workerList;
+		
+	}
+	
+	public void run()
+	{
 		try {
-			ServerSocket serverSocket = new ServerSocket(port);
+			ServerSocket serverSocket = new ServerSocket(serverPort);
 			while(true)
 			{
 				System.out.println("About to accept client connection..");
@@ -23,7 +37,7 @@ public class ServerMain {
 				System.out.println("Accepted connection from" + clientSocket);
 				ServerWorker worker = new ServerWorker(clientSocket);
 				// creates serverWorker which is a thread that communicates with clients
-				
+				workerList.add(worker);
 				worker.start();
 			}
 			
@@ -32,7 +46,4 @@ public class ServerMain {
 			e.printStackTrace();
 		}
 	}
-
-	
-
 }
